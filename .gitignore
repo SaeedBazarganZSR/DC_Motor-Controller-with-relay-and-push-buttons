@@ -1,45 +1,39 @@
+MDK-ARM/*
+!MDK-ARM/DC_Motor.uvoptx
+!MDK-ARM/DC_Motor.uvprojx
+!MDK-ARM/startup_stm32f103xb.s
+
 # Object files
-*.o
-*.ko
-*.obj
-*.elf
+#*.o
+#*.ko
+#*.obj
+#*.elf
 
 # Libraries
-*.lib
-*.a
-*.la
-*.lo
+#*.lib
+#*.a
+#*.la
+#*.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+#*.dll
+#*.so
+#*.so.*
+#*.dylib
 
 # Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+#*.exe
+#*.out
+#*.app
+#*.i*86
+#*.x86_64
+#*.hex
 
 # Misc
-*.map
-*.m
-*.png
-
-# Eclipse CDT project files
-.cproject
-.project
-.settings/
-
-# Vagrant directory
-.vagrant/
+#*.map
+#*.m
+#*.png
 
 # Include makefiles
-!Makefile
-*~
-
-# Libraries
-/lib
+#!Makefile
+#*~
