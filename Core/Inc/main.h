@@ -89,12 +89,10 @@ void Error_Handler(void);
 #define Segment_2_GPIO_Port GPIOB
 #define NSS_74595_Pin GPIO_PIN_12
 #define NSS_74595_GPIO_Port GPIOB
-#define SCK_74595_SPI2_Pin GPIO_PIN_13
-#define SCK_74595_SPI2_GPIO_Port GPIOB
-#define MISO_74595_SPI2_Pin GPIO_PIN_14
-#define MISO_74595_SPI2_GPIO_Port GPIOB
-#define MOSI_74595_SPI2_Pin GPIO_PIN_15
-#define MOSI_74595_SPI2_GPIO_Port GPIOB
+#define SCK_74595_Pin GPIO_PIN_13
+#define SCK_74595_GPIO_Port GPIOB
+#define MOSI_74595_Pin GPIO_PIN_15
+#define MOSI_74595_GPIO_Port GPIOB
 #define USART1_En_Pin GPIO_PIN_8
 #define USART1_En_GPIO_Port GPIOA
 #define SecondUSART1_En_Pin GPIO_PIN_11
