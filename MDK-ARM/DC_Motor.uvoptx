@@ -158,7 +158,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>test,0x0A</ItemText>
+          <ItemText>Counter</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
