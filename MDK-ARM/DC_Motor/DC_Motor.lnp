@@ -19,6 +19,7 @@
 "dc_motor\stm32f1xx_hal_tim_ex.o"
 "dc_motor\stm32f1xx_hal_uart.o"
 "dc_motor\system_stm32f1xx.o"
+"dc_motor\segments_buttons.o"
 --strict --scatter "DC_Motor\DC_Motor.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "Segments_Buttons.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,23 +45,9 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-uint8_t test[1];
+uint8_t test = 0;
 
-uint8_t Key = 0;
-enum Segment
-{
-	Zero = 0x30,
-	One = 0xF9,
-	Two = 0x52,
-	Three = 0xD0,
-	Four = 0x99,
-	Five = 0x94,
-	Six = 0x14,
-	Seven = 0xF1,
-	Eight = 0x10,
-	Nine = 0x90
-};
-	
+uint8_t Key = 0;	
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,12 +57,8 @@ static void MX_SPI1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
+void Initial_Prog(void);
 void Routine_Prog(void);
-uint8_t PushButtons_ReadData(void);
-void hc595_shift(uint8_t Data);
-void Display(uint8_t Number);
-void Gen_Number(uint8_t Number, uint8_t Place);
-//void ShiftOut(uint8_t Data, uint16_t Size);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -116,19 +98,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-	
-	for(uint8_t i = 0; i < 10; i++)
-	{
-		HAL_GPIO_TogglePin(Buzzer_GPIO_Port, Buzzer_Pin);
-		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-		HAL_Delay(200);
-	}
-	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-	
-	HAL_GPIO_WritePin(Segment_1_GPIO_Port, Segment_1_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(Segment_2_GPIO_Port, Segment_2_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(Segment_3_GPIO_Port, Segment_3_Pin, GPIO_PIN_SET);	
+	Initial_Prog();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -399,79 +369,32 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void Initial_Prog(void)
+{
+	for(uint8_t i = 0; i < 10; i++)
+	{
+		HAL_GPIO_TogglePin(Buzzer_GPIO_Port, Buzzer_Pin);
+		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		HAL_Delay(200);
+	}
+	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+	
+	HAL_GPIO_WritePin(Segment_1_GPIO_Port, Segment_1_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(Segment_2_GPIO_Port, Segment_2_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(Segment_3_GPIO_Port, Segment_3_Pin, GPIO_PIN_SET);	
+}
+/*-------------------------------------------------------------------*/
 void Routine_Prog(void)
 {
 	Key = PushButtons_ReadData();
-//	if(HAL_GPIO_ReadPin(Button_EncoderCalib_GPIO_Port, Button_EncoderCalib_Pin) == GPIO_PIN_RESET)
-//		test = 1;
-//	if(HAL_GPIO_ReadPin(Button_Open_GPIO_Port, Button_Open_Pin) == GPIO_PIN_RESET)
-//		test = 2;	
 	
-	Gen_Number(Zero, 1);
+	Gen_Number(&hspi2, Zero, 1);
 	HAL_Delay(2);
-	Gen_Number(Zero, 2);
+	Gen_Number(&hspi2, Zero, 2);
 	HAL_Delay(2);	
-	Gen_Number(One, 3);
+	Gen_Number(&hspi2, One, 3);
 	HAL_Delay(1);
-}
-/*-------------------------------------------------------------------*/
-uint8_t PushButtons_ReadData(void)
-{
-	uint8_t data = 0;
-	
-	HAL_GPIO_WritePin(SCK_74165_GPIO_Port, SCK_74165_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(MOSI_74165_GPIO_Port, MOSI_74165_Pin, GPIO_PIN_RESET);
-	HAL_Delay(1);
-	HAL_GPIO_WritePin(MOSI_74165_GPIO_Port, MOSI_74165_Pin, GPIO_PIN_SET);
-	for(uint8_t i = 0; i < 8; i++)
-	{
-		data = data << 1;
-		if(HAL_GPIO_ReadPin(MISO_74165_GPIO_Port, MISO_74165_Pin) == GPIO_PIN_SET)
-			data = data + 1;
-		HAL_GPIO_WritePin(SCK_74165_GPIO_Port, SCK_74165_Pin, GPIO_PIN_RESET);
-		HAL_Delay(1);
-		HAL_GPIO_WritePin(SCK_74165_GPIO_Port, SCK_74165_Pin, GPIO_PIN_SET);
-	}
-	HAL_GPIO_WritePin(SCK_74165_GPIO_Port, SCK_74165_Pin, GPIO_PIN_RESET);
-	
-	return ~data;
-}
-/*-------------------------------------------------------------------*/
-void hc595_shift(uint8_t Data)
-{
-	HAL_SPI_Transmit(&hspi2, &Data, 1, 100);
-	HAL_GPIO_WritePin(NSS_74595_GPIO_Port, NSS_74595_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(NSS_74595_GPIO_Port, NSS_74595_Pin, GPIO_PIN_RESET);
-}
-/*-------------------------------------------------------------------*/
-void Display(uint8_t Number)
-{
-	Gen_Number(Number, 1);
-}
-/*-------------------------------------------------------------------*/
-void Gen_Number(uint8_t Number, uint8_t Place)
-{
-	if(Place == 1)
-	{
-		HAL_GPIO_WritePin(Segment_1_GPIO_Port, Segment_1_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(Segment_2_GPIO_Port, Segment_2_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(Segment_3_GPIO_Port, Segment_3_Pin, GPIO_PIN_RESET);
-		hc595_shift(Number);
-	}
-	else if(Place == 2)
-	{
-		HAL_GPIO_WritePin(Segment_1_GPIO_Port, Segment_1_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(Segment_2_GPIO_Port, Segment_2_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(Segment_3_GPIO_Port, Segment_3_Pin, GPIO_PIN_SET);
-		hc595_shift(Number);
-	}
-	else if(Place == 3)
-	{
-		HAL_GPIO_WritePin(Segment_1_GPIO_Port, Segment_1_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(Segment_2_GPIO_Port, Segment_2_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(Segment_3_GPIO_Port, Segment_3_Pin, GPIO_PIN_SET);
-		hc595_shift(Number);
-	}
 }
 /*-------------------------------------------------------------------*/
 /* USER CODE END 4 */
